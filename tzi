@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+
+class Steganography {
+public:
+    static int main(int argc, char* argv[]) {
+        if (argc != 4) {
+            std::cerr << "Використання: " << argv[0] << " <вхідний_файл> <файл_для_вставки> <вихідний_файл>" << std::endl;
+            return 1;
+        }
+
+        std::ifstream inputFile(argv[1], std::ios::binary);
+        if (!inputFile.is_open()) {
+            std::cerr << "Неможливо відкрити вхідний файл" << std::endl;
+            return 1;
+        }
+
+        std::ifstream fileToInsert(argv[2], std::ios::binary);
+        if (!fileToInsert.is_open()) {
+            std::cerr << "Неможливо відкрити файл для вставки" << std::endl;
+            return 1;
+        }
+
+        std::ofstream outputFile(argv[3], std::ios::binary);
+
+        // Копіюємо вміст вхідного файлу в вихідний файл
+        outputFile << inputFile.rdbuf();
+
+        // Додаємо вміст файлу для вставки в кінець вихідного файлу
+        outputFile << fileToInsert.rdbuf();
+
+        std::cout << "Інформація успішно прихована!" << std::endl;
+
+        return 0;
+    }
+};
+
+int main(int argc, char* argv[]) {
+    return Steganography::main(argc, argv);
+}
+
